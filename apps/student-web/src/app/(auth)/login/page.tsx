@@ -1,0 +1,9 @@
+import EmailAuth from '@/components/EmailAuth';
+
+export default function LoginPage() {
+  return (
+    <main className="min-h-screen bg-white">
+      <EmailAuth />
+    </main>
+  );
+}
