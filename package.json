@@ -1,0 +1,29 @@
+{
+  "name": "bikash-bhaiya-classes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "init.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev:mobile": "npm run start --workspace=apps/mobile",
+    "dev:student": "npm run dev --workspace=apps/student-web",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "dev:functions": "npm run serve --workspace=functions",
+    "build:student": "npm run build --workspace=apps/student-web",
+    "build:admin": "npm run build --workspace=apps/admin",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "functions"
+  ]
+}

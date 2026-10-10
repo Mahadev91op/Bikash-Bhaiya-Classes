@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Deny access by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isStudent() {
+      // Logic for checking student role claims or roles collection
+      return isAuthenticated() && request.auth.token.role == 'student';
+    }
+    
+    function isAdmin() {
+      // Logic for checking admin role claims
+      return isAuthenticated() && request.auth.token.role == 'admin';
+    }
+
+    // Sessions: Only admins and the specific user can read their session
+    match /sessions/{userId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      // Writes are strictly controlled by the backend (Cloud Functions)
+      allow write: if false; 
+    }
+
+    // Profiles
+    match /users/{userId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      allow write: if false; // Profiles managed by auth trigger or functions
+    }
+    
+    // Courses (Public info can be read by anyone, detailed info by students/admins)
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}
