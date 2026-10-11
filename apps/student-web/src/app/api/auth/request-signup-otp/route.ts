@@ -3,9 +3,6 @@ import { adminDb } from '@/lib/firebaseAdmin';
 import * as nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
-let cachedTransporter: nodemailer.Transporter | null = null;
-let cachedConfig: any = null;
-
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -25,18 +22,16 @@ export async function POST(req: Request) {
       }
     }
 
-    // Cache config to make OTP sending instant
-    if (!cachedConfig) {
-      const configDoc = await adminDb.collection('settings').doc('emailConfig').get();
-      if (!configDoc.exists) return NextResponse.json({ error: 'Email configuration missing' }, { status: 500 });
-      cachedConfig = configDoc.data();
-      
-      if (!cachedConfig?.email || !cachedConfig?.appPassword) {
-        return NextResponse.json({ error: 'Incomplete email config' }, { status: 500 });
-      }
+    // Always fetch fresh config so updates in Admin Settings reflect immediately
+    const configDoc = await adminDb.collection('settings').doc('emailConfig').get();
+    if (!configDoc.exists) return NextResponse.json({ error: 'Email configuration missing' }, { status: 500 });
+    const emailConfig = configDoc.data();
+    
+    if (!emailConfig?.email || !emailConfig?.appPassword) {
+      return NextResponse.json({ error: 'Incomplete email config' }, { status: 500 });
     }
-    const systemEmail = cachedConfig.email;
-    const systemPassword = cachedConfig.appPassword;
+    const systemEmail = emailConfig.email;
+    const systemPassword = emailConfig.appPassword;
 
     const otp = crypto.randomInt(100000, 999999).toString();
     const expiresAt = Date.now() + 10 * 60 * 1000; // 10 mins
@@ -47,15 +42,13 @@ export async function POST(req: Request) {
       type: 'signup'
     });
 
-    if (!cachedTransporter) {
-      cachedTransporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: systemEmail,
-          pass: systemPassword
-        }
-      });
-    }
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: systemEmail,
+        pass: systemPassword
+      }
+    });
 
     const mailOptions = {
       from: `Bikash Bhaiya Classes <${systemEmail}>`,
@@ -72,7 +65,7 @@ export async function POST(req: Request) {
       `
     };
 
-    await cachedTransporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
     return NextResponse.json({ success: true, message: 'OTP sent successfully' });
   } catch (error: any) {
     console.error('Request OTP Error:', error);

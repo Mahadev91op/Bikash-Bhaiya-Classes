@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb, adminAuth } from '@/lib/firebaseAdmin';
+import * as admin from 'firebase-admin';
 
 export async function POST(req: Request) {
   try {
@@ -20,11 +21,11 @@ export async function POST(req: Request) {
     }
 
     const otpData = otpDoc.data();
-    if (otpData?.otp !== otp) {
+    if (!otpData || otpData.otp !== otp) {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }
 
-    if (Date.now() > otpData.expiresAt) {
+    if (Date.now() > (otpData.expiresAt || 0)) {
       return NextResponse.json({ error: 'OTP has expired' }, { status: 400 });
     }
 
@@ -45,7 +46,8 @@ export async function POST(req: Request) {
       referralFriendName: userData?.referralFriendName || '',
       referralFriendPhone: userData?.referralFriendPhone || '',
       role: 'student',
-      createdAt: new Date().toISOString()
+      status: 'active',
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
     // Delete OTP document
