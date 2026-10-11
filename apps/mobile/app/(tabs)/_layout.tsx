@@ -8,27 +8,27 @@ const TAB_CONFIG: Record<string, { label: string; activeIcon: keyof typeof Ionic
   index: {
     label: 'Home',
     activeIcon: 'home',
-    inactiveIcon: 'home-outline',
+    inactiveIcon: 'home',
   },
   courses: {
     label: 'Courses',
     activeIcon: 'school',
-    inactiveIcon: 'school-outline',
+    inactiveIcon: 'school',
   },
   learning: {
     label: 'Learning',
     activeIcon: 'book',
-    inactiveIcon: 'book-outline',
+    inactiveIcon: 'book',
   },
   alerts: {
     label: 'Alerts',
     activeIcon: 'notifications',
-    inactiveIcon: 'notifications-outline',
+    inactiveIcon: 'notifications',
   },
   profile: {
     label: 'Profile',
     activeIcon: 'person',
-    inactiveIcon: 'person-outline',
+    inactiveIcon: 'person',
   },
 };
 
@@ -53,7 +53,7 @@ function AppleTabBar({ state, descriptors, navigation }: any) {
           const config = TAB_CONFIG[route.name] || {
             label: route.name,
             activeIcon: 'ellipse' as const,
-            inactiveIcon: 'ellipse-outline' as const,
+            inactiveIcon: 'ellipse' as const,
           };
 
           const onPress = () => {
@@ -80,7 +80,7 @@ function AppleTabBar({ state, descriptors, navigation }: any) {
               <View style={[styles.iconWrapper, isFocused && styles.iconWrapperActive]}>
                 <Ionicons
                   name={isFocused ? config.activeIcon : config.inactiveIcon}
-                  size={21}
+                  size={23}
                   color={isFocused ? '#1d4ed8' : '#64748b'}
                 />
               </View>
@@ -124,34 +124,34 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     flexDirection: 'row',
     backgroundColor: '#ffffff',
-    borderTopWidth: 1,
+    borderTopWidth: 1.5,
     borderTopColor: '#e2e8f0',
-    height: Platform.OS === 'ios' ? 86 : 64,
+    height: Platform.OS === 'ios' ? 88 : 68,
     paddingBottom: Platform.OS === 'ios' ? 24 : 8,
     paddingTop: 6,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 12,
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 16,
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
+    gap: 2,
   },
   iconWrapper: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     paddingVertical: 3,
-    borderRadius: 12,
+    borderRadius: 14,
   },
   iconWrapperActive: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#dbeafe',
   },
   tabLabel: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: '800',
     color: '#64748b',
     letterSpacing: 0.1,
   },
