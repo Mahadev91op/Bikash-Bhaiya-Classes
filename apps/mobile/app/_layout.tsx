@@ -6,6 +6,9 @@ import { auth, db } from '../src/lib/firebase';
 import { View, Text, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { Ionicons } from '@expo/vector-icons';
+import { TabBarVisibilityProvider } from '../src/context/TabBarVisibilityContext';
+
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<User | null>(null);
@@ -89,9 +92,10 @@ export default function RootLayout() {
         <Text style={{ fontSize: 24, fontWeight: '900', color: '#0f172a', marginBottom: 6, textAlign: 'center' }}>
           App Under Maintenance
         </Text>
-        <View style={{ backgroundColor: '#fef3c7', paddingHorizontal: 14, paddingVertical: 5, borderRadius: 999, borderWidth: 1, borderColor: '#fde68a', marginBottom: 20 }}>
+        <View style={{ backgroundColor: '#fef3c7', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 999, borderWidth: 1, borderColor: '#fde68a', marginBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <Ionicons name="flash" size={13} color="#92400e" />
           <Text style={{ fontSize: 11, fontWeight: '800', color: '#92400e', textTransform: 'uppercase', letterSpacing: 1.2 }}>
-            ⚡ Upgrades In Progress
+            Upgrades In Progress
           </Text>
         </View>
         <View style={{ backgroundColor: '#ffffff', borderRadius: 20, padding: 20, borderWidth: 2, borderColor: '#e2e8f0', width: '100%', marginBottom: 24, shadowColor: '#000000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }}>
@@ -120,9 +124,11 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <TabBarVisibilityProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </TabBarVisibilityProvider>
   );
 }

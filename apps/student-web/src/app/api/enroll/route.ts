@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
 
     // 8. Add congratulatory notification
     await adminDb.collection('users').doc(studentId).collection('notifications').add({
-      title: 'Course Enrolled! 🎉',
+      title: 'Course Enrolled Successfully',
       message: `You have successfully enrolled in "${courseData.title}". Start watching lectures now!`,
       type: 'enrollment',
       courseId: courseId,

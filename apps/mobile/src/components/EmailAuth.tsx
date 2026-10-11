@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, signInWithCustomToken } from 'firebase/auth
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Enable LayoutAnimation on Android
@@ -288,14 +289,21 @@ export default function EmailAuth() {
         </View>
         
         <View style={styles.body}>
-          {error ? <View style={styles.errorContainer}><Text style={styles.errorText}>⚠️ {error}</Text></View> : null}
+          {error ? (
+            <View style={[styles.errorContainer, { flexDirection: 'row', alignItems: 'center', gap: 6 }]}>
+              <Ionicons name="alert-circle" size={16} color="#b91c1c" />
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : null}
 
           {mode === 'conflict' && (
             <View style={styles.form}>
-              <View style={[styles.infoBox, { backgroundColor: '#fff7ed', borderColor: '#ffedd5' }]}>
-                <Text style={{ fontSize: 32, marginBottom: 10 }}>⚠️</Text>
+              <View style={[styles.infoBox, { backgroundColor: '#fff7ed', borderColor: '#ffedd5', alignItems: 'center' }]}>
+                <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#fed7aa', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+                  <Ionicons name="alert" size={26} color="#ea580c" />
+                </View>
                 <Text style={[styles.infoText, { color: '#9a3412', fontWeight: 'bold', fontSize: 16 }]}>Login Conflict Detected</Text>
-                <Text style={[styles.subtitleDark, { marginTop: 8, color: '#c2410c' }]}>
+                <Text style={[styles.subtitleDark, { marginTop: 8, color: '#c2410c', textAlign: 'center' }]}>
                   Your account is currently active on <Text style={{ fontWeight: 'bold', color: '#7c2d12' }}>{conflictData?.deviceName}</Text>.
                   Logging in here will log you out from that device.
                 </Text>

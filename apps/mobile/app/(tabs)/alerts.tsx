@@ -9,11 +9,14 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useTabBarVisibility } from '../../src/context/TabBarVisibilityContext';
 import { auth, db } from '../../src/lib/firebase';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, writeBatch } from 'firebase/firestore';
 
 export default function MobileAlertsScreen() {
   const router = useRouter();
+  const { handleScroll } = useTabBarVisibility();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [filter, setFilter] = useState<'all' | 'unread' | 'announcements' | 'academic'>('all');
   const [loading, setLoading] = useState(true);
@@ -118,13 +121,15 @@ export default function MobileAlertsScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => setRefreshing(true)} colors={['#2563eb']} />}
       >
         {loading ? (
           <ActivityIndicator color="#2563eb" style={{ marginVertical: 30 }} />
         ) : filtered.length === 0 ? (
           <View style={styles.emptyView}>
-            <Text style={styles.emptyIcon}>🔔</Text>
+            <Ionicons name="notifications-outline" size={44} color="#94a3b8" />
             <Text style={styles.emptyTitle}>No Notifications</Text>
             <Text style={styles.emptySub}>You are all caught up with your classes.</Text>
           </View>
@@ -138,7 +143,11 @@ export default function MobileAlertsScreen() {
                 {!item.read && <View style={styles.unreadDot} />}
                 <View style={styles.notifRow}>
                   <View style={[styles.notifIconCircle, item.type === 'enrollment' ? { backgroundColor: '#ecfdf5' } : { backgroundColor: '#eff6ff' }]}>
-                    <Text style={{ fontSize: 18 }}>{item.type === 'enrollment' ? '🎉' : '📺'}</Text>
+                    <Ionicons
+                      name={item.type === 'enrollment' ? 'sparkles' : 'tv-outline'}
+                      size={20}
+                      color={item.type === 'enrollment' ? '#059669' : '#2563eb'}
+                    />
                   </View>
 
                   <View style={{ flex: 1 }}>

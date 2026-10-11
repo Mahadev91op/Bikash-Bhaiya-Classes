@@ -11,12 +11,15 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useTabBarVisibility } from '../../src/context/TabBarVisibilityContext';
 import { auth, db } from '../../src/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default function MobileProfileScreen() {
   const router = useRouter();
+  const { handleScroll } = useTabBarVisibility();
   const [student, setStudent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -66,7 +69,7 @@ export default function MobileProfileScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalIconContainer}>
-              <Text style={{ fontSize: 28 }}>⚠️</Text>
+              <Ionicons name="alert-circle-outline" size={32} color="#f59e0b" />
             </View>
             <Text style={styles.modalTitle}>Ready to Leave?</Text>
             <Text style={styles.modalSubtitle}>
@@ -103,7 +106,12 @@ export default function MobileProfileScreen() {
         <Text style={styles.headerTitle}>My Profile</Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         
         {/* Profile Card (Matching Design Screenshot 5) */}
         <View style={styles.profileCard}>
@@ -117,28 +125,31 @@ export default function MobileProfileScreen() {
           </Text>
 
           <View style={styles.classBadge}>
-            <Text style={styles.classBadgeText}>
-              🎓 Class {student?.className || '12'} • WBCHSE • Batch 2024-26
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+              <Ionicons name="school-outline" size={13} color="#2563eb" />
+              <Text style={styles.classBadgeText}>
+                Class {student?.className || '12'} • WBCHSE • Batch 2024-26
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* 3 Stat Cards in a row (Matching Design Screenshot 5) */}
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
-            <Text style={{ fontSize: 20 }}>🔥</Text>
+            <Ionicons name="flame" size={22} color="#f59e0b" />
             <Text style={styles.statNumber}>{student?.streak || 5} Days</Text>
             <Text style={styles.statLabel}>Streak</Text>
           </View>
 
           <View style={styles.statBox}>
-            <Text style={{ fontSize: 20 }}>📚</Text>
+            <Ionicons name="book-outline" size={22} color="#2563eb" />
             <Text style={styles.statNumber}>{enrolledCount}</Text>
             <Text style={styles.statLabel}>Active Courses</Text>
           </View>
 
           <View style={styles.statBox}>
-            <Text style={{ fontSize: 20 }}>🎖</Text>
+            <Ionicons name="ribbon-outline" size={22} color="#059669" />
             <Text style={styles.statNumber}>1</Text>
             <Text style={styles.statLabel}>Certificate</Text>
           </View>
@@ -149,7 +160,7 @@ export default function MobileProfileScreen() {
         <View style={styles.menuGroup}>
           <View style={styles.menuItem}>
             <View style={[styles.menuIconBox, { backgroundColor: '#eff6ff' }]}>
-              <Text style={{ fontSize: 16 }}>🎯</Text>
+              <Ionicons name="locate-outline" size={17} color="#2563eb" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.menuTitle}>Academic Details</Text>
@@ -160,7 +171,7 @@ export default function MobileProfileScreen() {
 
           <View style={styles.menuItem}>
             <View style={[styles.menuIconBox, { backgroundColor: '#eff6ff' }]}>
-              <Text style={{ fontSize: 16 }}>📱</Text>
+              <Ionicons name="phone-portrait-outline" size={17} color="#2563eb" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.menuTitle}>Device Security</Text>
@@ -179,7 +190,7 @@ export default function MobileProfileScreen() {
             activeOpacity={0.8}
           >
             <View style={[styles.menuIconBox, { backgroundColor: '#ecfdf5' }]}>
-              <Text style={{ fontSize: 16 }}>💬</Text>
+              <Ionicons name="chatbubbles-outline" size={17} color="#059669" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.menuTitle}>Help & Support</Text>
@@ -194,7 +205,7 @@ export default function MobileProfileScreen() {
             activeOpacity={0.8}
           >
             <View style={[styles.menuIconBox, { backgroundColor: '#fee2e2' }]}>
-              <Text style={{ fontSize: 16 }}>📺</Text>
+              <Ionicons name="logo-youtube" size={17} color="#dc2626" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.menuTitle}>Official YouTube Channel</Text>
@@ -210,7 +221,10 @@ export default function MobileProfileScreen() {
           onPress={() => setShowLogoutModal(true)}
           activeOpacity={0.8}
         >
-          <Text style={styles.logoutBtnText}>🚪 Log Out of Account</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <Ionicons name="log-out-outline" size={18} color="#dc2626" />
+            <Text style={styles.logoutBtnText}>Log Out of Account</Text>
+          </View>
         </TouchableOpacity>
 
       </ScrollView>

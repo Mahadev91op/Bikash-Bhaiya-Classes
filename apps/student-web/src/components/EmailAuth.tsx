@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword, signInWithCustomToken } from 'firebase/auth
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { useRouter } from 'next/navigation';
+import { AlertTriangle, CheckCircle2, AlertOctagon } from 'lucide-react';
 
 const StyledInput = ({ type, placeholder, value, onChange, maxLength }: any) => (
   <input 
@@ -331,15 +332,15 @@ export default function EmailAuth() {
           
           {/* Error Message */}
           <div className={`transition-all duration-500 overflow-hidden ${error ? 'max-h-24 opacity-100 mb-6' : 'max-h-0 opacity-0 mb-0'}`}>
-            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg text-sm font-medium flex items-center">
-              <span className="mr-2">⚠️</span> {error}
+            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg text-sm font-medium flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 shrink-0 text-red-500" /> <span>{error}</span>
             </div>
           </div>
 
           {/* Success Message */}
           <div className={`transition-all duration-500 overflow-hidden ${success ? 'max-h-24 opacity-100 mb-6' : 'max-h-0 opacity-0 mb-0'}`}>
-            <div className="p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-lg text-sm font-medium flex items-center">
-              <span className="mr-2">✅</span> {success}
+            <div className="p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-lg text-sm font-medium flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 shrink-0 text-green-500" /> <span>{success}</span>
             </div>
           </div>
 
@@ -349,7 +350,9 @@ export default function EmailAuth() {
             {mode === 'conflict' && (
               <div className="space-y-6 text-center">
                 <div className="bg-orange-50 p-6 rounded-2xl border border-orange-200">
-                  <div className="text-4xl mb-4">⚠️</div>
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                    <AlertOctagon className="w-6 h-6" />
+                  </div>
                   <h3 className="text-xl font-bold text-orange-800 mb-2">Login Conflict Detected</h3>
                   <p className="text-orange-700 font-medium">
                     Your account is currently active on <span className="font-bold text-orange-900">{conflictData?.deviceName}</span>. 

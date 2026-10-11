@@ -11,6 +11,7 @@ import {
   Share,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { db, auth } from '../../src/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -114,14 +115,27 @@ export default function MobileCourseDetailsScreen() {
                 <Text style={styles.classChipText}>{course.class || 'Class 12'}</Text>
               </View>
               <View style={styles.ratingChip}>
-                <Text style={styles.ratingChipText}>★ 4.9 (1.2k)</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                  <Ionicons name="star" size={11} color="#f59e0b" />
+                  <Text style={styles.ratingChipText}>4.9 (1.2k)</Text>
+                </View>
               </View>
             </View>
 
             <View style={styles.bottomStatsRow}>
-              <View style={styles.statPill}><Text style={styles.statPillText}>⏱ {course.duration || 'Full Year'}</Text></View>
-              <View style={styles.statPill}><Text style={styles.statPillText}>📚 48 lectures</Text></View>
-              <View style={styles.statPill}><Text style={styles.statPillText}>✓ WB Board</Text></View>
+              <View style={styles.statPill}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                  <Ionicons name="time-outline" size={11} color="#ffffff" />
+                  <Text style={styles.statPillText}>{course.duration || 'Full Year'}</Text>
+                </View>
+              </View>
+              <View style={styles.statPill}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                  <Ionicons name="book-outline" size={11} color="#ffffff" />
+                  <Text style={styles.statPillText}>48 lectures</Text>
+                </View>
+              </View>
+              <View style={styles.statPill}><Text style={styles.statPillText}>WB Board</Text></View>
             </View>
           </View>
         </View>
@@ -155,7 +169,10 @@ export default function MobileCourseDetailsScreen() {
               <Text style={styles.priceMain}>₹{Number(course.price || 0).toLocaleString()}</Text>
               <Text style={styles.priceCrossed}>₹{originalPrice.toLocaleString()}</Text>
             </View>
-            <Text style={styles.priceDiscount}>🔥 Special Discount - 45% OFF</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name="sparkles" size={12} color="#ea580c" />
+              <Text style={styles.priceDiscount}>Special Discount - 45% OFF</Text>
+            </View>
           </View>
 
           {isEnrolled ? (

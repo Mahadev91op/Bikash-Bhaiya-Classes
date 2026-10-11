@@ -10,11 +10,14 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useTabBarVisibility } from '../../src/context/TabBarVisibilityContext';
 import { auth, db } from '../../src/lib/firebase';
 import { collection, query, getDocs, doc, getDoc, limit } from 'firebase/firestore';
 
 export default function MobileLearningScreen() {
   const router = useRouter();
+  const { handleScroll } = useTabBarVisibility();
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -96,9 +99,9 @@ export default function MobileLearningScreen() {
       {/* Sub-Pills Bar (Matching Design Screenshot 4) */}
       <View style={styles.subPillsBar}>
         {[
-          { id: 'classroom', label: 'Classroom', icon: '📊' },
-          { id: 'lectures', label: 'Lectures', icon: '▶' },
-          { id: 'notes', label: 'Notes', icon: '📄' },
+          { id: 'classroom', label: 'Classroom', icon: 'grid-outline' as const },
+          { id: 'lectures', label: 'Lectures', icon: 'play-circle-outline' as const },
+          { id: 'notes', label: 'Notes', icon: 'document-text-outline' as const },
         ].map((item) => {
           const active = activeTab === item.id;
           return (
@@ -108,8 +111,9 @@ export default function MobileLearningScreen() {
               onPress={() => setActiveTab(item.id as any)}
               activeOpacity={0.8}
             >
+              <Ionicons name={item.icon} size={15} color={active ? '#1d4ed8' : '#64748b'} />
               <Text style={[styles.subPillText, active && styles.subPillTextActive]}>
-                {item.icon} {item.label}
+                {item.label}
               </Text>
             </TouchableOpacity>
           );
@@ -119,13 +123,15 @@ export default function MobileLearningScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2563eb']} />}
       >
         {loading ? (
           <ActivityIndicator color="#2563eb" style={{ marginVertical: 40 }} />
         ) : enrolledCourses.length === 0 ? (
           <View style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>🎓</Text>
+            <Ionicons name="school-outline" size={48} color="#2563eb" />
             <Text style={styles.emptyTitle}>Your Classroom is Empty</Text>
             <Text style={styles.emptySub}>
               You have not enrolled in any batch program yet. Browse available courses to start learning.
@@ -193,7 +199,10 @@ export default function MobileLearningScreen() {
                 onPress={() => Linking.openURL('https://www.youtube.com/@wbartsbyvikassir')}
                 activeOpacity={0.8}
               >
-                <Text style={styles.continueBtnText}>▶ Continue Learning</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <Ionicons name="play" size={15} color="#ffffff" />
+                  <Text style={styles.continueBtnText}>Continue Learning</Text>
+                </View>
               </TouchableOpacity>
             </View>
 
@@ -214,7 +223,7 @@ export default function MobileLearningScreen() {
             {/* Alert 1: Live Soon */}
             <View style={styles.alertCard}>
               <View style={[styles.alertIconBox, { backgroundColor: '#fee2e2' }]}>
-                <Text style={{ fontSize: 18 }}>📺</Text>
+                <Ionicons name="tv-outline" size={20} color="#dc2626" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.alertTagRed}>LIVE SOON</Text>
@@ -233,7 +242,7 @@ export default function MobileLearningScreen() {
             {/* Alert 2: Upcoming Test */}
             <View style={styles.alertCard}>
               <View style={[styles.alertIconBox, { backgroundColor: '#eff6ff' }]}>
-                <Text style={{ fontSize: 18 }}>📝</Text>
+                <Ionicons name="clipboard-outline" size={20} color="#2563eb" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.alertTagBlue}>UPCOMING TEST</Text>

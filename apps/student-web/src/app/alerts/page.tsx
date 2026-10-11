@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import { useAuth } from '@/providers/AuthProvider';
 import { db } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, writeBatch } from 'firebase/firestore';
+import { Bell, PartyPopper, Tv, CheckCheck, Check } from 'lucide-react';
 
 export default function AlertsPage() {
   const { user } = useAuth();
@@ -83,9 +84,10 @@ export default function AlertsPage() {
             <button
               type="button"
               onClick={handleMarkAllAsRead}
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline"
             >
-              Mark all as read
+              <CheckCheck className="w-3.5 h-3.5" />
+              <span>Mark all as read</span>
             </button>
           )}
         </div>
@@ -155,7 +157,9 @@ export default function AlertsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="bg-white rounded-3xl border-2 border-dashed border-slate-300 p-10 text-center space-y-3">
-            <span className="text-3xl">🔔</span>
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center">
+              <Bell className="w-6 h-6" />
+            </div>
             <h3 className="text-base font-black text-slate-800">No notifications in this view</h3>
             <p className="text-xs text-slate-500 font-medium">You are all caught up with your classes and announcements.</p>
           </div>
@@ -175,10 +179,14 @@ export default function AlertsPage() {
                 )}
 
                 <div className="flex items-start gap-3.5">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                     item.type === 'enrollment' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'
                   }`}>
-                    {item.type === 'enrollment' ? '🎉' : '📺'}
+                    {item.type === 'enrollment' ? (
+                      <PartyPopper className="w-5 h-5" />
+                    ) : (
+                      <Tv className="w-5 h-5" />
+                    )}
                   </div>
 
                   <div className="flex-1 space-y-1">

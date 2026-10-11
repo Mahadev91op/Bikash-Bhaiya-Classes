@@ -6,6 +6,16 @@ import Navbar from '@/components/Navbar';
 import { useAuth } from '@/providers/AuthProvider';
 import { db } from '@/lib/firebase';
 import { collection, query, getDocs, doc, getDoc } from 'firebase/firestore';
+import {
+  Search,
+  X,
+  Sparkles,
+  Star,
+  Clock,
+  BookOpen,
+  ArrowRight,
+  CheckCircle2,
+} from 'lucide-react';
 
 const formatImageUrl = (url?: string) => {
   if (!url) return 'https://images.unsplash.com/photo-1632516643720-e7f5d7d6eca8?q=80&w=800&auto=format&fit=crop';
@@ -38,13 +48,10 @@ export default function CoursesExplorerPage() {
           const uData = userDoc.data() || {};
           const eIds = new Set<string>(uData.enrolledCourses || []);
 
-          // Also check enrolledStudents subcollections
           for (const c of list) {
             try {
               const subSnap = await getDoc(doc(db, 'courses', c.id, 'enrolledStudents', user.uid));
-              if (subSnap.exists()) {
-                eIds.add(c.id);
-              }
+              if (subSnap.exists()) eIds.add(c.id);
             } catch (e) {}
           }
           setEnrolledCourseIds(Array.from(eIds));
@@ -59,7 +66,6 @@ export default function CoursesExplorerPage() {
     fetchCourses();
   }, [user]);
 
-  // Extract unique filters from courses in DB
   const filterOptions = useMemo(() => {
     const filters = new Set<string>(['All']);
     courses.forEach(c => {
@@ -73,7 +79,6 @@ export default function CoursesExplorerPage() {
     return Array.from(filters);
   }, [courses]);
 
-  // Filtered courses
   const filteredCourses = useMemo(() => {
     return courses.filter(c => {
       const matchSearch =
@@ -102,38 +107,38 @@ export default function CoursesExplorerPage() {
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight">Explore Courses</h1>
-              <p className="text-sm text-slate-500 font-semibold mt-1">
-                Find the right course to master your board exams with conceptual clarity.
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Explore Courses</h1>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+                Find the right course to master your board exams with complete conceptual clarity.
               </p>
             </div>
 
             {/* Search Input */}
             <div className="relative w-full md:w-96">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                🔍
+                <Search className="w-4 h-4" />
               </span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search courses, subjects, or classes..."
-                className="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition shadow-xs"
+                className="w-full pl-10 pr-9 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition shadow-2xs"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
                 >
-                  ✕
+                  <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {filterOptions.map((filter) => {
               const active = selectedFilter === filter;
               return (
@@ -141,10 +146,10 @@ export default function CoursesExplorerPage() {
                   key={filter}
                   type="button"
                   onClick={() => setSelectedFilter(filter)}
-                  className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap transition-all shadow-xs ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shadow-2xs ${
                     active
                       ? 'bg-blue-600 text-white shadow-blue-500/20'
-                      : 'bg-white text-slate-700 hover:bg-slate-100 border-2 border-slate-200'
+                      : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
                   }`}
                 >
                   {filter}
@@ -154,33 +159,35 @@ export default function CoursesExplorerPage() {
           </div>
         </div>
 
-        {/* Special Bundle Banner (Matching Design Screenshot 3) */}
-        <section className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-blue-500/15 border-2 border-blue-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        {/* Special Bundle Banner */}
+        <section className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 rounded-3xl p-6 sm:p-8 text-white shadow-md shadow-blue-500/10 border border-blue-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase bg-white/20 text-white backdrop-blur-md">
-              ⚡ Special Bundle Offer • Limited Time
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-white/20 text-white backdrop-blur-md">
+              <Sparkles className="w-3 h-3" />
+              <span>Special Batch Enrollment • 2026 Board</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
               Master All West Bengal Board Subjects with Bikash Bhaiya
             </h2>
-            <p className="text-blue-100 text-sm font-medium">
-              Get access to all batch lectures, digital PDF notes, and live doubt clearing sessions with 1-on-1 mentorship.
+            <p className="text-blue-100 text-xs sm:text-sm font-medium leading-relaxed">
+              Complete batch lectures, digital PDF handwritten notes, and live weekly doubt clearing sessions with 1-on-1 exam guidance.
             </p>
           </div>
           <a
             href="https://wa.me/916290325241?text=Hello%20Bikash%20Bhaiya%2C%20I%20want%20to%20enroll%20in%20the%20Special%20Batch%20Program"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3.5 bg-white text-blue-700 hover:bg-blue-50 font-black text-sm rounded-xl shadow-lg transition active:scale-95 whitespace-nowrap shrink-0"
+            className="px-5 py-3 bg-white text-blue-700 hover:bg-blue-50 font-extrabold text-xs rounded-xl shadow-md transition active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-2"
           >
-            Claim Special Offer →
+            <span>Claim Batch Offer</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </section>
 
         {/* Courses Grid */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-black text-slate-900">
+            <h3 className="text-base font-extrabold text-slate-900">
               Available Courses ({filteredCourses.length})
             </h3>
           </div>
@@ -188,7 +195,7 @@ export default function CoursesExplorerPage() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-96 bg-white rounded-2xl border-2 border-slate-200 animate-pulse p-4 space-y-4">
+                <div key={i} className="h-96 bg-white rounded-2xl border border-slate-200 animate-pulse p-4 space-y-4">
                   <div className="h-44 bg-slate-200 rounded-xl" />
                   <div className="h-5 bg-slate-200 rounded w-3/4" />
                   <div className="h-4 bg-slate-200 rounded w-1/2" />
@@ -196,16 +203,16 @@ export default function CoursesExplorerPage() {
               ))}
             </div>
           ) : filteredCourses.length === 0 ? (
-            <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-300 space-y-4">
-              <div className="text-4xl">🔍</div>
-              <h4 className="text-xl font-black text-slate-800">No courses found</h4>
-              <p className="text-sm text-slate-500 max-w-md mx-auto">
+            <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-200 space-y-3">
+              <Search className="w-10 h-10 text-slate-300 mx-auto" />
+              <h4 className="text-lg font-bold text-slate-800">No courses found</h4>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
                 No courses match your search "{searchQuery}" or selected filter "{selectedFilter}".
               </p>
               <button
                 type="button"
                 onClick={() => { setSearchQuery(''); setSelectedFilter('All'); }}
-                className="px-5 py-2.5 bg-blue-600 text-white font-black text-xs rounded-xl shadow-sm hover:bg-blue-700 transition"
+                className="px-4 py-2 bg-blue-600 text-white font-bold text-xs rounded-xl shadow-xs hover:bg-blue-700 transition"
               >
                 Reset Filters
               </button>
@@ -217,7 +224,7 @@ export default function CoursesExplorerPage() {
                 return (
                   <div
                     key={course.id}
-                    className="bg-white rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all flex flex-col overflow-hidden group"
+                    className="bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-blue-400 transition-all duration-200 flex flex-col overflow-hidden group"
                   >
                     {/* Course Banner */}
                     <div className="h-48 bg-slate-100 relative overflow-hidden">
@@ -226,37 +233,42 @@ export default function CoursesExplorerPage() {
                         alt={course.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-black text-slate-900 shadow-sm border border-slate-200">
+                      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-bold text-slate-900 shadow-2xs border border-slate-200">
                         {course.class || 'All Classes'}
                       </div>
-                      <div className="absolute top-3 right-3 bg-blue-600 text-white px-3 py-1 rounded-xl text-xs font-black shadow-sm">
+                      <div className="absolute top-3 right-3 bg-blue-600 text-white px-2.5 py-1 rounded-lg text-xs font-extrabold shadow-2xs">
                         ₹{Number(course.price).toLocaleString()}
                       </div>
                     </div>
 
                     {/* Course Body */}
-                    <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                      <div className="space-y-2.5">
+                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                      <div className="space-y-2">
                         <div className="flex items-center justify-between text-xs font-bold text-slate-500">
-                          <span className="flex items-center gap-1 text-amber-500 font-black">
-                            ★ 4.9 <span className="text-slate-400 font-medium">({course.enrolledCount || 20}+ enrolled)</span>
+                          <span className="flex items-center gap-1 text-amber-500 font-extrabold">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                            <span>4.9</span>
+                            <span className="text-slate-400 font-normal">({course.enrolledCount || 20}+ enrolled)</span>
                           </span>
-                          <span>{course.duration || 'Full Academic Year'}</span>
+                          <span className="flex items-center gap-1 text-slate-400">
+                            <Clock className="w-3.5 h-3.5" />
+                            <span>{course.duration || 'Full Year'}</span>
+                          </span>
                         </div>
 
-                        <h3 className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                        <h3 className="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
                           {course.title}
                         </h3>
 
-                        <p className="text-xs text-slate-500 font-medium line-clamp-3 leading-relaxed">
+                        <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed">
                           {course.description || 'Structured conceptual lectures mapped to latest West Bengal board syllabus with chapter tests.'}
                         </p>
 
                         {/* Subject Badges */}
                         {Array.isArray(course.subjects) && course.subjects.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 pt-1">
+                          <div className="flex flex-wrap gap-1 pt-1">
                             {course.subjects.map((sub: string, idx: number) => (
-                              <span key={idx} className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                              <span key={idx} className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
                                 {sub}
                               </span>
                             ))}
@@ -265,18 +277,18 @@ export default function CoursesExplorerPage() {
                       </div>
 
                       {/* Bottom Price & Action */}
-                      <div className="pt-4 border-t-2 border-slate-100 flex items-center justify-between gap-3">
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
                         <div>
                           <span className="text-[10px] uppercase font-bold text-slate-400 block">Total Fee</span>
-                          <span className="text-lg font-black text-slate-900">
+                          <span className="text-base font-extrabold text-slate-900">
                             ₹{Number(course.price).toLocaleString()}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <Link
                             href={`/courses/${course.id}`}
-                            className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs rounded-xl transition"
+                            className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition"
                           >
                             Details
                           </Link>
@@ -284,16 +296,18 @@ export default function CoursesExplorerPage() {
                           {isEnrolled ? (
                             <Link
                               href="/classroom"
-                              className="px-4 py-2.5 bg-emerald-50 text-emerald-700 font-black text-xs rounded-xl border border-emerald-200 hover:bg-emerald-100 transition"
+                              className="px-3.5 py-2 bg-emerald-50 text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200 hover:bg-emerald-100 transition flex items-center gap-1"
                             >
-                              ✓ Classroom
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Classroom</span>
                             </Link>
                           ) : (
                             <Link
                               href={`/checkout/${course.id}`}
-                              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs rounded-xl shadow-md shadow-blue-500/20 transition active:scale-95"
+                              className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-2xs transition active:scale-95 flex items-center gap-1"
                             >
-                              Enroll Now
+                              <span>Enroll Now</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
                             </Link>
                           )}
                         </div>

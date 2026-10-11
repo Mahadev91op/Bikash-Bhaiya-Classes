@@ -12,6 +12,8 @@ import {
   Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useTabBarVisibility } from '../../src/context/TabBarVisibilityContext';
 import { db } from '../../src/lib/firebase';
 import { collection, query, getDocs } from 'firebase/firestore';
 
@@ -26,6 +28,7 @@ const formatImageUrl = (url?: string) => {
 
 export default function MobileCoursesScreen() {
   const router = useRouter();
+  const { handleScroll } = useTabBarVisibility();
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -91,11 +94,13 @@ export default function MobileCoursesScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2563eb']} />}
       >
         {/* Search Bar (Matching Design Screenshot 3) */}
         <View style={styles.searchBar}>
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Ionicons name="search-outline" size={18} color="#94a3b8" />
           <TextInput
             value={search}
             onChangeText={setSearch}
@@ -105,7 +110,7 @@ export default function MobileCoursesScreen() {
           />
           {search ? (
             <TouchableOpacity onPress={() => setSearch('')}>
-              <Text style={styles.clearIcon}>✕</Text>
+              <Ionicons name="close-circle" size={18} color="#94a3b8" />
             </TouchableOpacity>
           ) : null}
         </View>
@@ -178,7 +183,10 @@ export default function MobileCoursesScreen() {
                     <View style={styles.classBadge}>
                       <Text style={styles.classBadgeText}>{course.class || 'WB Board'}</Text>
                     </View>
-                    <Text style={styles.ratingText}>★ 4.9</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                      <Ionicons name="star" size={12} color="#f59e0b" />
+                      <Text style={styles.ratingText}>4.9</Text>
+                    </View>
                   </View>
 
                   <Text style={styles.courseTitle} numberOfLines={2}>
@@ -187,8 +195,14 @@ export default function MobileCoursesScreen() {
                   <Text style={styles.teacherName}>By Bikash Chowdhury</Text>
 
                   <View style={styles.durationRow}>
-                    <Text style={styles.durationText}>⏱ {course.duration || 'Full Year'}</Text>
-                    <Text style={styles.durationText}>📚 40+ lectures</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                      <Ionicons name="time-outline" size={12} color="#64748b" />
+                      <Text style={styles.durationText}>{course.duration || 'Full Year'}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                      <Ionicons name="book-outline" size={12} color="#64748b" />
+                      <Text style={styles.durationText}>40+ lectures</Text>
+                    </View>
                   </View>
 
                   <View style={styles.courseFooter}>

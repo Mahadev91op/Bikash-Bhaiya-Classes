@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import { useAuth } from '@/providers/AuthProvider';
 import { db } from '@/lib/firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { Flame, BookOpen, Award, Target, Smartphone, MessageCircle, ShieldCheck, LogOut, Edit3, GraduationCap, ArrowRight, Check } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, student, logout } = useAuth();
@@ -81,9 +82,9 @@ export default function ProfilePage() {
             <p className="text-xs text-slate-500 font-semibold">
               {student?.email || user?.email} • {student?.phone ? `+91 ${student.phone}` : 'No phone linked'}
             </p>
-            <div className="pt-2">
-              <span className="inline-block px-3.5 py-1 rounded-full text-xs font-black bg-blue-50 text-blue-700 border border-blue-200">
-                🎓 Class {student?.className || '12'} • West Bengal Board • Batch 2024-26
+            <div className="pt-2 flex justify-center">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black bg-blue-50 text-blue-700 border border-blue-200">
+                <GraduationCap className="w-3.5 h-3.5" /> Class {student?.className || '12'} • West Bengal Board • Batch 2024-26
               </span>
             </div>
           </div>
@@ -92,9 +93,9 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs rounded-xl transition"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs rounded-xl transition"
             >
-              ✏️ Edit Profile Details
+              <Edit3 className="w-3.5 h-3.5" /> Edit Profile Details
             </button>
           ) : (
             <form onSubmit={handleSaveProfile} className="pt-4 border-t-2 border-slate-100 space-y-3 text-left">
@@ -167,20 +168,26 @@ export default function ProfilePage() {
         {/* 3 Stat Cards in a row (Matching Design Screenshot 5) */}
         <section className="grid grid-cols-3 gap-3">
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 text-center shadow-xs">
-            <span className="text-xl">🔥</span>
-            <div className="text-lg font-black text-slate-900 mt-1">{student?.streak || 5} Days</div>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 mx-auto flex items-center justify-center">
+              <Flame className="w-4 h-4 fill-amber-400" />
+            </div>
+            <div className="text-lg font-black text-slate-900 mt-2">{student?.streak || 5} Days</div>
             <span className="text-[11px] text-slate-400 font-bold">Study Streak</span>
           </div>
 
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 text-center shadow-xs">
-            <span className="text-xl">📚</span>
-            <div className="text-lg font-black text-slate-900 mt-1">{enrolledCount}</div>
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 mx-auto flex items-center justify-center">
+              <BookOpen className="w-4 h-4" />
+            </div>
+            <div className="text-lg font-black text-slate-900 mt-2">{enrolledCount}</div>
             <span className="text-[11px] text-slate-400 font-bold">Active Courses</span>
           </div>
 
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 text-center shadow-xs">
-            <span className="text-xl">🎖</span>
-            <div className="text-lg font-black text-slate-900 mt-1">1</div>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 mx-auto flex items-center justify-center">
+              <Award className="w-4 h-4" />
+            </div>
+            <div className="text-lg font-black text-slate-900 mt-2">1</div>
             <span className="text-[11px] text-slate-400 font-bold">Certificate</span>
           </div>
         </section>
@@ -194,7 +201,9 @@ export default function ProfilePage() {
           <div className="space-y-2">
             <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-xl">🎯</span>
+                <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                  <Target className="w-4 h-4" />
+                </div>
                 <div>
                   <h4 className="text-xs font-black text-slate-900">Academic Details</h4>
                   <span className="text-[11px] text-slate-500 font-semibold">
@@ -202,12 +211,14 @@ export default function ProfilePage() {
                   </span>
                 </div>
               </div>
-              <span className="text-xs text-slate-400 font-bold">✓</span>
+              <Check className="w-4 h-4 text-slate-400" />
             </div>
 
             <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-xl">📱</span>
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                  <Smartphone className="w-4 h-4" />
+                </div>
                 <div>
                   <h4 className="text-xs font-black text-slate-900">Device Security Status</h4>
                   <span className="text-[11px] text-slate-500 font-semibold">
@@ -236,7 +247,9 @@ export default function ProfilePage() {
               className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 flex items-center justify-between transition group"
             >
               <div className="flex items-center gap-3">
-                <span className="text-xl">💬</span>
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-4 h-4" />
+                </div>
                 <div>
                   <h4 className="text-xs font-black text-slate-900 group-hover:text-emerald-700">
                     Help & Support
@@ -246,12 +259,14 @@ export default function ProfilePage() {
                   </span>
                 </div>
               </div>
-              <span className="text-xs text-slate-400 group-hover:text-emerald-600 font-bold">→</span>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 font-bold" />
             </a>
 
             <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-xl">🛡</span>
+                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
                 <div>
                   <h4 className="text-xs font-black text-slate-900">Privacy Policy & Guidelines</h4>
                   <span className="text-[11px] text-slate-500 font-semibold">
@@ -270,7 +285,7 @@ export default function ProfilePage() {
             onClick={logout}
             className="w-full py-4 bg-red-50 hover:bg-red-100 text-red-600 font-black text-sm rounded-2xl border-2 border-red-200 transition active:scale-95 flex items-center justify-center gap-2"
           >
-            <span>🚪</span>
+            <LogOut className="w-4 h-4" />
             <span>Log Out of Account</span>
           </button>
         </div>

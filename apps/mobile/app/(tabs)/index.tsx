@@ -11,6 +11,8 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useTabBarVisibility } from '../../src/context/TabBarVisibilityContext';
 import { auth, db } from '../../src/lib/firebase';
 import { collection, query, getDocs, doc, getDoc, limit } from 'firebase/firestore';
 
@@ -25,6 +27,7 @@ const formatImageUrl = (url?: string) => {
 
 export default function MobileHomeScreen() {
   const router = useRouter();
+  const { handleScroll } = useTabBarVisibility();
   const [student, setStudent] = useState<any>(null);
   const [courses, setCourses] = useState<any[]>([]);
   const [enrolledCourse, setEnrolledCourse] = useState<any>(null);
@@ -112,13 +115,15 @@ export default function MobileHomeScreen() {
           onPress={() => router.push('/(tabs)/alerts' as any)}
           activeOpacity={0.8}
         >
-          <Text style={styles.bellIcon}>🔔</Text>
+          <Ionicons name="notifications-outline" size={20} color="#0f172a" />
         </TouchableOpacity>
       </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2563eb']} />}
       >
         {/* Greeting Banner Card (Matching Design Screenshot 1) */}
@@ -129,7 +134,7 @@ export default function MobileHomeScreen() {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.greetingTitle}>
-                {getTimeGreeting()}, {studentName} 👋
+                {getTimeGreeting()}, {studentName}
               </Text>
               <Text style={styles.greetingSub}>
                 Ready to crush your {student?.className ? `Class ${student.className}` : 'WB Board'} goals?
@@ -163,7 +168,7 @@ export default function MobileHomeScreen() {
               </View>
 
               <View style={styles.playCircle}>
-                <Text style={styles.playIcon}>▶</Text>
+                <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
               </View>
             </View>
 
@@ -178,7 +183,10 @@ export default function MobileHomeScreen() {
             </View>
 
             <View style={styles.continueFooter}>
-              <Text style={styles.timeLeftText}>⏱ 18 mins left</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <Ionicons name="time-outline" size={13} color="#64748b" />
+                <Text style={styles.timeLeftText}>18 mins left</Text>
+              </View>
               <TouchableOpacity
                 style={styles.continueBtn}
                 onPress={() => router.push('/(tabs)/learning' as any)}
@@ -194,7 +202,7 @@ export default function MobileHomeScreen() {
             onPress={() => router.push('/(tabs)/courses' as any)}
             activeOpacity={0.8}
           >
-            <Text style={styles.emptyContinueIcon}>🎓</Text>
+            <Ionicons name="school-outline" size={40} color="#2563eb" />
             <Text style={styles.emptyContinueTitle}>Start Your Learning Journey</Text>
             <Text style={styles.emptyContinueSub}>Explore Bikash Bhaiya's complete batch programs</Text>
             <View style={styles.exploreBtnSmall}>
@@ -265,7 +273,10 @@ export default function MobileHomeScreen() {
                   <Text style={styles.featuredTeacher}>By Bikash Chowdhury</Text>
 
                   <View style={styles.featuredFooter}>
-                    <Text style={styles.featuredRating}>★ 4.9</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                      <Ionicons name="star" size={12} color="#f59e0b" />
+                      <Text style={styles.featuredRating}>4.9</Text>
+                    </View>
                     <Text style={styles.enrollNowText}>Enroll Now →</Text>
                   </View>
                 </View>
@@ -289,11 +300,11 @@ export default function MobileHomeScreen() {
             activeOpacity={0.8}
           >
             <View style={[styles.noteIconCircle, { backgroundColor: '#eff6ff' }]}>
-              <Text style={{ fontSize: 20 }}>📄</Text>
+              <Ionicons name="document-text-outline" size={22} color="#2563eb" />
             </View>
             <Text style={styles.noteTitle} numberOfLines={1}>Class 12 Formula Sheet</Text>
             <Text style={styles.noteSub}>All Subjects • 16 pages</Text>
-            <Text style={styles.noteActionText}>Download PDF 📥</Text>
+            <Text style={styles.noteActionText}>Download PDF</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -302,7 +313,7 @@ export default function MobileHomeScreen() {
             activeOpacity={0.8}
           >
             <View style={[styles.noteIconCircle, { backgroundColor: '#ecfdf5' }]}>
-              <Text style={{ fontSize: 20 }}>📝</Text>
+              <Ionicons name="create-outline" size={22} color="#059669" />
             </View>
             <Text style={styles.noteTitle} numberOfLines={1}>Weekly Board Mock Test</Text>
             <Text style={styles.noteSub}>Board Pattern • 20 Qs</Text>

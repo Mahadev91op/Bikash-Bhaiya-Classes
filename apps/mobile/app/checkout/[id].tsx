@@ -11,6 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { auth, db } from '../../src/lib/firebase';
 import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, addDoc, serverTimestamp, increment, arrayUnion } from 'firebase/firestore';
 
@@ -187,7 +188,7 @@ export default function MobileCheckoutScreen() {
 
       // 6. Add notification
       await addDoc(collection(db, 'users', user.uid, 'notifications'), {
-        title: 'Course Enrolled! 🎉',
+        title: 'Course Enrolled Successfully',
         message: `You have successfully enrolled in "${course.title}". Start watching your lectures now!`,
         type: 'enrollment',
         courseId: courseId,
@@ -196,7 +197,7 @@ export default function MobileCheckoutScreen() {
       });
 
       Alert.alert(
-        'Enrollment Confirmed! 🎉',
+        'Enrollment Confirmed',
         `Congratulations! You have been enrolled in "${course.title}". Your account is activated.`,
         [
           {
@@ -286,7 +287,10 @@ export default function MobileCheckoutScreen() {
 
           {couponError ? (
             <View style={styles.couponErr}>
-              <Text style={styles.couponErrText}>⚠️ {couponError}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                <Ionicons name="alert-circle-outline" size={14} color="#dc2626" />
+                <Text style={styles.couponErrText}>{couponError}</Text>
+              </View>
             </View>
           ) : null}
         </View>
@@ -319,9 +323,9 @@ export default function MobileCheckoutScreen() {
           <Text style={styles.boxTitle}>Select Payment Method</Text>
 
           {[
-            { id: 'upi', name: 'UPI / Google Pay / PhonePe', desc: 'Instant payment via UPI apps', icon: '⚡' },
-            { id: 'card', name: 'Credit / Debit Card', desc: 'Visa, MasterCard, RuPay & more', icon: '💳' },
-            { id: 'netbanking', name: 'Net Banking', desc: 'All major Indian banks supported', icon: '🏦' },
+            { id: 'upi', name: 'UPI / Google Pay / PhonePe', desc: 'Instant payment via UPI apps', iconName: 'flash-outline' as const },
+            { id: 'card', name: 'Credit / Debit Card', desc: 'Visa, MasterCard, RuPay & more', iconName: 'card-outline' as const },
+            { id: 'netbanking', name: 'Net Banking', desc: 'All major Indian banks supported', iconName: 'business-outline' as const },
           ].map((m) => {
             const active = paymentMethod === m.id;
             return (
@@ -331,7 +335,9 @@ export default function MobileCheckoutScreen() {
                 onPress={() => setPaymentMethod(m.id as any)}
                 activeOpacity={0.8}
               >
-                <View style={styles.methodIcon}><Text style={{ fontSize: 16 }}>{m.icon}</Text></View>
+                <View style={styles.methodIcon}>
+                  <Ionicons name={m.iconName} size={18} color="#2563eb" />
+                </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.methodName}>{m.name}</Text>
                   <Text style={styles.methodDesc}>{m.desc}</Text>
@@ -346,7 +352,10 @@ export default function MobileCheckoutScreen() {
 
         {/* Security & Agreement Badges */}
         <View style={styles.securityRow}>
-          <Text style={styles.securityText}>🛡 256-bit SSL Encrypted • 100% Secure Payment</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <Ionicons name="shield-checkmark-outline" size={14} color="#059669" />
+            <Text style={styles.securityText}>256-bit SSL Encrypted • 100% Secure Payment</Text>
+          </View>
         </View>
 
         <TouchableOpacity
